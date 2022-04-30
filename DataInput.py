@@ -7,10 +7,32 @@ from PIL import Image
 import random
 import math
 import time
+import glob
 
 start_time = time.time()
 SIZE = 101*101 #Size of the images 
+path = "C:/Users/ajdan/Documents/PR-ML/Machine Learning/Project 4 ML/Machine-Learning-Project4/C. elegans/Data/0"
 
+
+SIZE = 28*28
+filenames = glob.glob(path + '/*.png')
+filenames.sort()
+images = [cv.imread(img) for img in filenames]
+
+scale_percent = 28 # percent of original size
+width = int(101 * scale_percent / 100)
+height = int(101 * scale_percent / 100)
+dim = (width, height)
+
+imagesResized = [cv.resize(img, dim, interpolation=cv.INTER_AREA) for img in images]
+imagesGrayscale = [cv.cvtColor(img, cv.COLOR_BGR2GRAY) for img in imagesResized]
+imagesBlurred = [cv.GaussianBlur(img, (3,3), 0) for img in imagesGrayscale]
+
+sobelx = [cv.Sobel(src=img, ddepth=cv.CV_64F, dx=1, dy=0, ksize=5) for img in imagesBlurred]
+sobely = [cv.Sobel(src=img, ddepth=cv.CV_64F, dx=0, dy=1, ksize=5) for img in imagesBlurred]
+sobelxy = [cv.Sobel(src=img, ddepth=cv.CV_64F, dx=1, dy=1, ksize=5) for img in imagesBlurred]
+
+edges = [cv.Canny(image=img, threshold1=60, threshold2=140) for img in imagesBlurred]
 #Load all images in Data set 0 into a list
 print("LOADING WORM DATA SET 0")
 imgs = []
