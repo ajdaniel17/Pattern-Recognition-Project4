@@ -8,10 +8,12 @@ import random
 import math
 import time
 import glob
+import cv2 as cv
 
 start_time = time.time()
 SIZE = 101*101 #Size of the images 
-path = "C:/Users/ajdan/Documents/PR-ML/Machine Learning/Project 4 ML/Machine-Learning-Project4/C. elegans/Data/0"
+
+path = "C:/Users/ajdan/Documents/PR-ML/Pattern Recognition/Project 4 PR/Pattern-Recognition-Project4/C. elegans/Data1/0"
 
 
 SIZE = 28*28
@@ -35,40 +37,50 @@ sobelxy = [cv.Sobel(src=img, ddepth=cv.CV_64F, dx=1, dy=1, ksize=5) for img in i
 edges = [cv.Canny(image=img, threshold1=60, threshold2=140) for img in imagesBlurred]
 #Load all images in Data set 0 into a list
 print("LOADING WORM DATA SET 0")
-imgs = []
-path = os.getcwd() + "/C. elegans/Data/0"
-valid_images = [".png"]
-for f in os.listdir(path):
-    ext = os.path.splitext(f)[1]
-    if ext.lower() not in valid_images:
-        continue
-    imgs.append(Image.open(os.path.join(path,f)))
+
 
 #Take all images loaded into list and convert them into greyscale, reshape them to be 1 x SIZE, then append them to numpy array NoWorm
 print("FORMATTING LIST INTO NUMPY ARRAY")
 NoWorm = np.empty((0,SIZE),int)
-for i in range(len(imgs)):
-    temp = np.reshape(imgs[i].convert('L'),SIZE)
+for i in range(len(edges)):
+    temp = np.reshape(edges[i].convert('L'),SIZE)
     temp = temp.astype(int)
     temp = np.array([temp])
     NoWorm  = np.append(NoWorm,temp,0)
 print("Shape of Formatted Numpy Array: ", NoWorm.shape)
 
+
+path = "C:/Users/ajdan/Documents/PR-ML/Pattern Recognition/Project 4 PR/Pattern-Recognition-Project4/C. elegans/Data1/1"
+
+
+SIZE = 28*28
+filenames = glob.glob(path + '/*.png')
+filenames.sort()
+images = [cv.imread(img) for img in filenames]
+
+scale_percent = 28 # percent of original size
+width = int(101 * scale_percent / 100)
+height = int(101 * scale_percent / 100)
+dim = (width, height)
+
+imagesResized = [cv.resize(img, dim, interpolation=cv.INTER_AREA) for img in images]
+imagesGrayscale = [cv.cvtColor(img, cv.COLOR_BGR2GRAY) for img in imagesResized]
+imagesBlurred = [cv.GaussianBlur(img, (3,3), 0) for img in imagesGrayscale]
+
+sobelx = [cv.Sobel(src=img, ddepth=cv.CV_64F, dx=1, dy=0, ksize=5) for img in imagesBlurred]
+sobely = [cv.Sobel(src=img, ddepth=cv.CV_64F, dx=0, dy=1, ksize=5) for img in imagesBlurred]
+sobelxy = [cv.Sobel(src=img, ddepth=cv.CV_64F, dx=1, dy=1, ksize=5) for img in imagesBlurred]
+
+edges = [cv.Canny(image=img, threshold1=60, threshold2=140) for img in imagesBlurred]
+
 #Load all images in Data set 1 into a list
 print("LOADING WORM DATA SET 1")
-imgs = []
-path = os.getcwd() + "/C. elegans/Data/1"
-for f in os.listdir(path):
-    ext = os.path.splitext(f)[1]
-    if ext.lower() not in valid_images:
-        continue
-    imgs.append(Image.open(os.path.join(path,f)))
 
 #Take all images loaded into list and convert them into greyscale, reshape them to be 1 x SIZE, then append them to numpy array Worm
 print("FORMATTING LIST INTO NUMPY ARRAY")
 Worm = np.empty((0,SIZE),int)
-for i in range(len(imgs)):
-    temp = np.reshape(imgs[i].convert('L'),SIZE)
+for i in range(len(edges)):
+    temp = np.reshape(edges[i].convert('L'),SIZE)
     temp = temp.astype(int)
     temp = np.array([temp])
     Worm  = np.append(Worm,temp,0)
