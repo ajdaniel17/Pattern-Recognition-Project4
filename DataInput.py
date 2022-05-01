@@ -11,10 +11,8 @@ import glob
 import cv2 as cv
 
 start_time = time.time()
-SIZE = 101*101 #Size of the images 
 
-path = "C:/Users/ajdan/Documents/PR-ML/Pattern Recognition/Project 4 PR/Pattern-Recognition-Project4/C. elegans/Data1/0"
-
+path = "C:/Users/ajdan/Documents/PR-ML/Pattern Recognition/Project 4 PR/Pattern-Recognition-Project4/C. elegans/Data/0"
 
 SIZE = 28*28
 filenames = glob.glob(path + '/*.png')
@@ -43,14 +41,14 @@ print("LOADING WORM DATA SET 0")
 print("FORMATTING LIST INTO NUMPY ARRAY")
 NoWorm = np.empty((0,SIZE),int)
 for i in range(len(edges)):
-    temp = np.reshape(edges[i].convert('L'),SIZE)
+    temp = np.reshape(edges[i],SIZE)
     temp = temp.astype(int)
     temp = np.array([temp])
     NoWorm  = np.append(NoWorm,temp,0)
 print("Shape of Formatted Numpy Array: ", NoWorm.shape)
 
 
-path = "C:/Users/ajdan/Documents/PR-ML/Pattern Recognition/Project 4 PR/Pattern-Recognition-Project4/C. elegans/Data1/1"
+path = "C:/Users/ajdan/Documents/PR-ML/Pattern Recognition/Project 4 PR/Pattern-Recognition-Project4/C. elegans/Data/1"
 
 
 SIZE = 28*28
@@ -80,7 +78,7 @@ print("LOADING WORM DATA SET 1")
 print("FORMATTING LIST INTO NUMPY ARRAY")
 Worm = np.empty((0,SIZE),int)
 for i in range(len(edges)):
-    temp = np.reshape(edges[i].convert('L'),SIZE)
+    temp = np.reshape(edges[i],SIZE)
     temp = temp.astype(int)
     temp = np.array([temp])
     Worm  = np.append(Worm,temp,0)
