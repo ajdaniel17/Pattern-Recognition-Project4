@@ -94,7 +94,7 @@ K = 2
 
 #Randomize the Order of the Data, generate DataX and DataT
 DataX = np.empty((0,D),float)
-DataT = np.empty((0,K),int)
+DataT = np.empty((0,1),int)
 
 Remain = (NumPic * 2) - 1
 for i in range((NumPic*2)):
@@ -103,9 +103,9 @@ for i in range((NumPic*2)):
     DataX = np.append(DataX,np.array([X[p]]),0)
 
     if Y[p] == 1:
-        DataT = np.append(DataT,np.array([[1,0]]),0)
+        DataT = np.append(DataT,np.array([[-1]]),0)
     elif Y[p] == 0:
-        DataT = np.append(DataT,np.array([[0,1]]),0)
+        DataT = np.append(DataT,np.array([[1]]),0)
 
     X = np.delete(X,p,0)
     Y = np.delete(Y,p,0)
